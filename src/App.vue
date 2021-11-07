@@ -4,14 +4,14 @@
     <h1>{{ count }}</h1>
     <h1>{{ double }}</h1>
     <h1>{{ greetings }}</h1>
+    <button @click="openModal">Open Modal</button><br />
+    <modal :isOpen="modalIsOpen" @close-modal="onModalClose">
+      My Modal !!!!</modal
+    >
+    <h1 v-if="loading">Loading!...</h1>
+    <img v-if="loaded" :src="result[0].url" />
     <h1>X: {{ x }}, Y: {{ y }}</h1>
-    <ul>
-      <li v-for="number in numbers" :key="number">
-        <h1>{{ number }}</h1>
-      </li>
-    </ul>
-    <h1>{{ person.name }}</h1>
-    <button @click="increase">👍+1</button>
+    <button @click="increase">👍+1</button><br />
     <button @click="updateGreeting">Update Title</button>
   </div>
 </template>
@@ -26,109 +26,74 @@ import {
   onMounted,
   onUnmounted,
 } from "vue";
-import useMouseTracker from "@/hooks/useMouseTracker";
+import useMouseTracker from "./hooks/useMouseTracker";
+import useURLLoader from "./hooks/useURLLoader";
+import Modal from "./components/Modal.vue";
 interface DataProps {
   count: number;
   double: number;
   increase: () => void;
-  numbers: number[];
-  person: { name?: string };
 }
-
+interface DogResult {
+  message: string;
+  status: string;
+}
+interface CatResult {
+  id: string;
+  url: string;
+  width: number;
+  height: number;
+}
 export default {
   name: "App",
+  components: {
+    Modal,
+  },
   setup() {
-    // const count = ref(0);
-    // const increase = () => {
-    //   count.value++;
-    // };
-    // const double = computed(() => {
-    //   return count.value * 2;
-    // });
-
-    const greetings = ref("");
-    const updateGreeting = () => {
-      greetings.value += "Hello! ";
-    };
-    const { x, y } = useMouseTracker();
-    ///滑鼠位置
-    // const x = ref(0);
-    // const y = ref(0);
-    // const updateMouse = (e: MouseEvent) => {
-    //   x.value = e.pageX;
-    //   y.value = e.pageY;
-    // };
-    // onMounted(() => {
-    //   document.addEventListener("click", updateMouse);
-    // });
-    // onUnmounted(() => {
-    //   document.removeEventListener("click", updateMouse);
-    // });
-
-    watch(greetings, (newValue, oldValue) => {
-      // console.log("old", oldValue);
-      // console.log("new", newValue);
-      document.title = "updated" + greetings.value;
-    });
     const data: DataProps = reactive({
       count: 0,
       increase: () => {
         data.count++;
       },
-      double: computed(() => {
-        return data.count * 2;
-      }),
-      numbers: [0, 1, 2],
-      person: {},
+      double: computed(() => data.count * 2),
     });
-    //修改陣列的第一個數值
-    data.numbers[0] = 5;
-    //替物件新增內容
-    data.person.name = "viking";
-
+    const { x, y } = useMouseTracker();
+    const { result, loading, loaded } = useURLLoader<CatResult[]>(
+      "https://api.thecatapi.com/v1/images/search?limit=1"
+    );
+    watch(result, () => {
+      if (result.value) {
+        console.log("value", result.value[0].url);
+      }
+    });
+    const greetings = ref("");
+    const updateGreeting = () => {
+      greetings.value += "Hello! ";
+    };
     const refData = toRefs(data);
+    const modalIsOpen = ref(false);
+    const openModal = () => {
+      modalIsOpen.value = true;
+    };
+    const onModalClose = () => {
+      modalIsOpen.value = false;
+    };
     return {
-      // ...data,
       ...refData,
+      greetings,
       updateGreeting,
       x,
       y,
+      result,
+      loading,
+      loaded,
+      modalIsOpen,
+      openModal,
+      onModalClose,
     };
   },
 };
-
-// export default {
-//   name: "App",
-//   setup() {
-//     const count = ref(0);
-//     const double = computed(() => {
-//       return count.value * 2;
-//     });
-//     const increase = () => {
-//       count.value++;
-//     };
-//     return {
-//       count,
-//       increase,
-//       double,
-//     };
-//   },
-// };
-
-// export default {
-//   data() {
-//     return {
-//       count: 0,
-//     };
-//   },
-//   methods: {
-//     increase() {
-//       this.count++;
-//     },
-//   },
-// };
 </script>
-
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
