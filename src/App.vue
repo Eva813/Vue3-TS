@@ -10,19 +10,12 @@
     </ul>
     <h1>{{ person.name }}</h1>
     <button @click="increase">👍+1</button>
+    <button @click="updateGreeting">Update Title</button>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  ref,
-  computed,
-  reactive,
-  toRefs,
-  onMounted,
-  onUpdated,
-  onRenderTriggered,
-} from "vue";
+import { ref, computed, reactive, toRefs, watch } from "vue";
 interface DataProps {
   count: number;
   double: number;
@@ -42,16 +35,16 @@ export default {
     //   return count.value * 2;
     // });
 
-    onMounted(() => {
-      console.log("mounted");
-    });
-    onUpdated(() => {
-      console.log("updated");
-    });
-    onRenderTriggered((event) => {
-      console.log(event);
-    });
+    const greetings = ref("");
+    const updateGreeting = () => {
+      greetings.value += "Hello! ";
+    };
 
+    watch(greetings, (newValue, oldValue) => {
+      console.log("old", oldValue);
+      console.log("new", newValue);
+      document.title = "updated" + greetings.value;
+    });
     const data: DataProps = reactive({
       count: 0,
       increase: () => {
@@ -72,6 +65,7 @@ export default {
     return {
       // ...data,
       ...refData,
+      updateGreeting,
     };
   },
 };
