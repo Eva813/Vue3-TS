@@ -1,120 +1,42 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <h1>{{ count }}</h1>
-    <h1>{{ double }}</h1>
-    <h1>{{ greetings }}</h1>
-    <p>{{error}}</p>
-    <button @click="openModal">Open Modal</button><br />
-    <Suspense>
-      <template #default>
-        <async-show />
-        <dog-show />
-      </template>
-      <template #fallback>
-        <h1>Loading !...</h1>
-      </template>
-    </Suspense>
-
-    <modal :isOpen="modalIsOpen" @close-modal="onModalClose">
-      My Modal !!!!</modal
-    >
-    <h1 v-if="loading">Loading!...</h1>
-    <img v-if="loaded" :src="result[0].url" />
-    <h1>X: {{ x }}, Y: {{ y }}</h1>
-    <button @click="increase">👍+1</button><br />
-    <button @click="updateGreeting">Update Title</button>
+  <div class="container">
+    <column-list :list="outlist"></column-list>
   </div>
 </template>
 
 <script lang="ts">
-import {
-  ref,
-  computed,
-  reactive,
-  toRefs,
-  watch,
-  onMounted,
-  onUnmounted,
-  onErrorCaptured
-} from "vue";
-import useMouseTracker from "./hooks/useMouseTracker";
-import useURLLoader from "./hooks/useURLLoader";
-import Modal from "./components/Modal.vue";
-import AsyncShow from "./components/AsyncShow.vue";
-import DogShow from "./components/DogShow.vue";
-interface DataProps {
-  count: number;
-  double: number;
-  increase: () => void;
-}
-interface DogResult {
-  message: string;
-  status: string;
-}
-interface CatResult {
-  id: string;
-  url: string;
-  width: number;
-  height: number;
-}
-export default {
+import { defineComponent } from "vue";
+import "bootstrap/dist/css/bootstrap.min.css";
+//將其中的interface也引入
+import ColumnList, { ColumnProps } from "@/components/ColumnList.vue";
+const testData: ColumnProps[] = [
+  {
+    id: 1,
+    title: "test1的專欄",
+    description: "這是的test1專欄，有一段非常有意思的簡介，可以更新一下喔！",
+    avatar:
+      "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100",
+  },
+  {
+    id: 2,
+    title: "test2的專欄",
+    description: "这是的test2專欄，有興趣就來看看",
+    avatar:
+      "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100",
+  },
+];
+
+export default defineComponent({
   name: "App",
   components: {
-    Modal,
-    AsyncShow,
-    DogShow,
+    ColumnList,
   },
   setup() {
-    const error = ref(null);
-    onErrorCaptured((e: any) => {
-      error.value = e;
-      return true;
-    });
-
-    const data: DataProps = reactive({
-      count: 0,
-      increase: () => {
-        data.count++;
-      },
-      double: computed(() => data.count * 2),
-    });
-    const { x, y } = useMouseTracker();
-    const { result, loading, loaded } = useURLLoader<CatResult[]>(
-      "https://api.thecatapi.com/v1/images/search?limit=1"
-    );
-    watch(result, () => {
-      if (result.value) {
-        console.log("value", result.value[0].url);
-      }
-    });
-    const greetings = ref("");
-    const updateGreeting = () => {
-      greetings.value += "Hello! ";
-    };
-    const refData = toRefs(data);
-    const modalIsOpen = ref(false);
-    const openModal = () => {
-      modalIsOpen.value = true;
-    };
-    const onModalClose = () => {
-      modalIsOpen.value = false;
-    };
     return {
-      ...refData,
-      greetings,
-      updateGreeting,
-      x,
-      y,
-      result,
-      loading,
-      loaded,
-      modalIsOpen,
-      openModal,
-      onModalClose,
+      outlist: testData,
     };
   },
-};
+});
 </script>
 <style>
 #app {
