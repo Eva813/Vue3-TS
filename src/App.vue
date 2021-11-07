@@ -4,7 +4,18 @@
     <h1>{{ count }}</h1>
     <h1>{{ double }}</h1>
     <h1>{{ greetings }}</h1>
+    <p>{{error}}</p>
     <button @click="openModal">Open Modal</button><br />
+    <Suspense>
+      <template #default>
+        <async-show />
+        <dog-show />
+      </template>
+      <template #fallback>
+        <h1>Loading !...</h1>
+      </template>
+    </Suspense>
+
     <modal :isOpen="modalIsOpen" @close-modal="onModalClose">
       My Modal !!!!</modal
     >
@@ -25,10 +36,13 @@ import {
   watch,
   onMounted,
   onUnmounted,
+  onErrorCaptured
 } from "vue";
 import useMouseTracker from "./hooks/useMouseTracker";
 import useURLLoader from "./hooks/useURLLoader";
 import Modal from "./components/Modal.vue";
+import AsyncShow from "./components/AsyncShow.vue";
+import DogShow from "./components/DogShow.vue";
 interface DataProps {
   count: number;
   double: number;
@@ -48,8 +62,16 @@ export default {
   name: "App",
   components: {
     Modal,
+    AsyncShow,
+    DogShow,
   },
   setup() {
+    const error = ref(null);
+    onErrorCaptured((e: any) => {
+      error.value = e;
+      return true;
+    });
+
     const data: DataProps = reactive({
       count: 0,
       increase: () => {
