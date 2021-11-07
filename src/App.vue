@@ -3,6 +3,8 @@
     <img alt="Vue logo" src="./assets/logo.png" />
     <h1>{{ count }}</h1>
     <h1>{{ double }}</h1>
+    <h1>{{ greetings }}</h1>
+    <h1>X: {{ x }}, Y: {{ y }}</h1>
     <ul>
       <li v-for="number in numbers" :key="number">
         <h1>{{ number }}</h1>
@@ -15,7 +17,16 @@
 </template>
 
 <script lang="ts">
-import { ref, computed, reactive, toRefs, watch } from "vue";
+import {
+  ref,
+  computed,
+  reactive,
+  toRefs,
+  watch,
+  onMounted,
+  onUnmounted,
+} from "vue";
+import useMouseTracker from "@/hooks/useMouseTracker";
 interface DataProps {
   count: number;
   double: number;
@@ -39,10 +50,24 @@ export default {
     const updateGreeting = () => {
       greetings.value += "Hello! ";
     };
+    const { x, y } = useMouseTracker();
+    ///滑鼠位置
+    // const x = ref(0);
+    // const y = ref(0);
+    // const updateMouse = (e: MouseEvent) => {
+    //   x.value = e.pageX;
+    //   y.value = e.pageY;
+    // };
+    // onMounted(() => {
+    //   document.addEventListener("click", updateMouse);
+    // });
+    // onUnmounted(() => {
+    //   document.removeEventListener("click", updateMouse);
+    // });
 
     watch(greetings, (newValue, oldValue) => {
-      console.log("old", oldValue);
-      console.log("new", newValue);
+      // console.log("old", oldValue);
+      // console.log("new", newValue);
       document.title = "updated" + greetings.value;
     });
     const data: DataProps = reactive({
@@ -66,6 +91,8 @@ export default {
       // ...data,
       ...refData,
       updateGreeting,
+      x,
+      y,
     };
   },
 };
