@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <GlobalHeader :user="currentUser"></GlobalHeader>
     <column-list :list="outlist"></column-list>
   </div>
 </template>
@@ -9,6 +10,12 @@ import { defineComponent } from "vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 //將其中的interface也引入
 import ColumnList, { ColumnProps } from "@/components/ColumnList.vue";
+import GlobalHeader, { UserProps } from "@/components/GlobalHeader.vue";
+
+const currentUser: UserProps = {
+  isLogin: false,
+};
+
 const testData: ColumnProps[] = [
   {
     id: 1,
@@ -21,6 +28,26 @@ const testData: ColumnProps[] = [
     id: 2,
     title: "test2的專欄",
     description: "这是的test2專欄，有興趣就來看看",
+    //avatar: "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100",
+  },
+  {
+    id: 3,
+    title: "test3的專欄",
+    description: "這是的test3專欄，有一段非常有意思的簡介，可以更新一下喔！",
+    avatar:
+      "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100",
+  },
+  {
+    id: 4,
+    title: "test4的專欄",
+    description: "這是的test4專欄，有一段非常有意思的簡介，可以更新一下喔！",
+    avatar:
+      "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100",
+  },
+  {
+    id: 5,
+    title: "test5的專欄",
+    description: "這是的test5專欄，有一段非常有意思的簡介，可以更新一下喔！",
     avatar:
       "http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5ee22dd58b3c4520912b9470.jpg?x-oss-process=image/resize,m_pad,h_100,w_100",
   },
@@ -30,10 +57,12 @@ export default defineComponent({
   name: "App",
   components: {
     ColumnList,
+    GlobalHeader,
   },
   setup() {
     return {
       outlist: testData,
+      currentUser,
     };
   },
 });
