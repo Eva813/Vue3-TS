@@ -16,7 +16,9 @@
       <li class="list-inline-item">
         <DropDown :title="`你好 ${user.name}`">
           <DropItem><a href="#" class="dropdown-item">新建文章</a></DropItem>
-          <DropItem><a href="#" class="dropdown-item">編輯資料</a></DropItem>
+          <DropItem disabled
+            ><a href="#" class="dropdown-item">編輯資料</a></DropItem
+          >
           <DropItem><a href="#" class="dropdown-item">退出</a></DropItem>
         </DropDown>
 
