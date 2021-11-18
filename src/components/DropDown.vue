@@ -20,7 +20,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted } from "vue";
+import { defineComponent, ref, onMounted, onUnmounted, watch } from "vue";
+import useClickOutside from "@/hooks/useClickOutside";
 
 export default defineComponent({
   name: "DropDown",
@@ -36,29 +37,26 @@ export default defineComponent({
     const toggleOpen = () => {
       isOpen.value = !isOpen.value;
     };
-    const handler = (e: MouseEvent) => {
-      if (dropdownRef.value) {
-        if (
-          !dropdownRef.value.contains(e.target as HTMLElement) &&
-          isOpen.value
-        ) {
-          isOpen.value = false;
-        }
+    //宣告變數（取得布林值）
+    const isClickOutside = useClickOutside(dropdownRef);
+    //需要根據isClickOutside的值，來設置 isOpen 的值
+    //在 setup 中以下這段邏輯只能執行一次，更新的話這段語法無法再被執行
+    //  if(isOpen.value && isClickOutside.value){
+    //    isOpen.value=false;
+    //  }
+    //所以使用 watch 來監測響應式對象的變化
+    watch(isClickOutside, () => {
+      if (isOpen.value && isClickOutside.value) {
+        isOpen.value = false;
       }
-    };
-    onMounted(() => {
-      document.addEventListener("click", handler);
-    });
-    onUnmounted(() => {
-      document.removeEventListener("click", handler);
     });
 
     return {
       isOpen,
       toggleOpen,
-      handler,
       // 返回和 ref 同名的响应式对象，就可以拿到对应的 dom 节点
       dropdownRef,
+      isClickOutside,
     };
   },
 });
