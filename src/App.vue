@@ -3,8 +3,10 @@
     <global-header :user="currentUser"></global-header>
     <form action="">
       <div class="mb-3">
-        <label class="form-label">邮箱地址</label>
-        <validate-input :rules="emailRules"></validate-input>
+        <label class="form-label">郵件地址</label>
+        <validate-input :rules="emailRules" v-model="emailVal">
+          {{ emailVal }}
+        </validate-input>
       </div>
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">邮箱地址</label>
@@ -32,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 //將其中的interface也引入
 import ColumnList, { ColumnProps } from "@/components/ColumnList.vue";
@@ -91,6 +93,7 @@ export default defineComponent({
     ValidateInput,
   },
   setup() {
+    const emailVal = ref("Eva");
     const emailRules: RulesProp = [
       { type: "required", message: "電子郵件為必填" },
       { type: "email", message: "請輸入正確的格式" },
@@ -115,6 +118,7 @@ export default defineComponent({
       emailRef,
       validateEmail,
       emailRules,
+      emailVal,
     };
   },
 });
