@@ -1,10 +1,13 @@
 <template>
   <div class="container">
-    <GlobalHeader :user="currentUser"></GlobalHeader>
-    <!-- <column-list :list="outlist"></column-list> -->
+    <global-header :user="currentUser"></global-header>
     <form action="">
       <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">email</label>
+        <label class="form-label">邮箱地址</label>
+        <validate-input :rules="emailRules"></validate-input>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">邮箱地址</label>
         <input
           type="text"
           class="form-control"
@@ -17,7 +20,7 @@
         </div>
       </div>
       <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">密碼</label>
+        <label for="exampleInputPassword1" class="form-label">密码</label>
         <input
           type="password"
           class="form-control"
@@ -34,6 +37,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 //將其中的interface也引入
 import ColumnList, { ColumnProps } from "@/components/ColumnList.vue";
 import GlobalHeader, { UserProps } from "@/components/GlobalHeader.vue";
+import ValidateInput, { RulesProp } from "./components/ValidateInput.vue";
+
 const emailReg =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const currentUser: UserProps = {
@@ -83,8 +88,13 @@ export default defineComponent({
   components: {
     // ColumnList,
     GlobalHeader,
+    ValidateInput,
   },
   setup() {
+    const emailRules: RulesProp = [
+      { type: "required", message: "電子郵件為必填" },
+      { type: "email", message: "請輸入正確的格式" },
+    ];
     const emailRef = reactive({
       val: "",
       error: false,
@@ -93,10 +103,10 @@ export default defineComponent({
     const validateEmail = () => {
       if (emailRef.val.trim() === "") {
         emailRef.error = true;
-        emailRef.message = "不能為空白";
+        emailRef.message = "can not be empty";
       } else if (!emailReg.test(emailRef.val)) {
         emailRef.error = true;
-        emailRef.message = "email 不符合格式";
+        emailRef.message = "should be valid email";
       }
     };
     return {
@@ -104,6 +114,7 @@ export default defineComponent({
       currentUser,
       emailRef,
       validateEmail,
+      emailRules,
     };
   },
 });
