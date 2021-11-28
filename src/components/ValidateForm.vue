@@ -31,6 +31,7 @@ export default defineComponent({
     // test 發送一系列測試訊息
     const callback = (func: ValidateFunc) => {
       funcArr.push(func);
+      //console.log(funcArr);
     };
     //使用 on 將它加入監聽器中
     emitter.on("form-item-created", callback);
