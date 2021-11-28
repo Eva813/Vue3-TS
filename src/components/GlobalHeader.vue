@@ -1,14 +1,18 @@
 <template>
   <nav class="navbar navbar-dark bg-primary justify-content-between mb-4 px-4">
     <!-- navbar-brand -->
-    <a class="navbar-brand" href="#">談天說地</a>
+    <router-link class="navbar-brand" to="/">談天說地</router-link>
     <!-- 判斷沒有登入，要顯示的樣子 -->
     <ul v-if="!user.isLogin" class="list-inline mb-0">
       <li class="list-inline-item">
-        <a href="#" class="btn btn-outline-light my-2">登入</a>
+        <router-link to="/login" class="btn btn-outline-light my-2"
+          >登入</router-link
+        >
       </li>
       <li class="list-inline-item">
-        <a href="#" class="btn btn-outline-light my-2">註冊</a>
+        <router-link to="/login" class="btn btn-outline-light my-2"
+          >註冊</router-link
+        >
       </li>
     </ul>
     <!-- 若登入的話 -->
