@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <global-header :user="currentUser"></global-header>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">郵件地址</label>
@@ -36,17 +35,15 @@
 import { defineComponent, ref } from "vue";
 import "bootstrap/dist/css/bootstrap.min.css";
 //將其中的interface也引入
-import ColumnList, { ColumnProps } from "@/components/ColumnList.vue";
-import GlobalHeader, { UserProps } from "@/components/GlobalHeader.vue";
 import ValidateInput, { RulesProp } from "@/components/ValidateInput.vue";
 import ValidateForm from "@/components/ValidateForm.vue";
 import { testData } from "../testData";
-const emailReg =
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-const currentUser: UserProps = {
-  isLogin: true,
-  name: "Eva",
-};
+// const emailReg =
+//   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+// const currentUser: UserProps = {
+//   isLogin: true,
+//   name: "Eva",
+// };
 
 // const testData: ColumnProps[] = [
 //   {
@@ -89,7 +86,6 @@ export default defineComponent({
   name: "App",
   components: {
     // ColumnList,
-    GlobalHeader,
     ValidateInput,
     ValidateForm,
   },
@@ -109,7 +105,6 @@ export default defineComponent({
     };
     return {
       outlist: testData,
-      currentUser,
       emailRules,
       emailVal,
       passwordVal,
