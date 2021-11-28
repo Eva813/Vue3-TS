@@ -1,8 +1,18 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
-    <home></home>
-    <login></login>
+    <router-view></router-view>
+    <footer class="text-center py-4 text-secondary bg-light mt-6">
+      <small>
+        <ul class="list-inline mb-0">
+          <li class="list-inline-item">© 2021專欄</li>
+          <li class="list-inline-item">課程</li>
+          <li class="list-inline-item">文件</li>
+          <li class="list-inline-item">與我聯絡</li>
+          <li class="list-inline-item">更多</li>
+        </ul>
+      </small>
+    </footer>
   </div>
 </template>
 
@@ -23,8 +33,8 @@ export default defineComponent({
   components: {
     // ColumnList,
     GlobalHeader,
-    Home,
-    Login,
+    // Home,
+    // Login,
   },
   setup() {
     return {
