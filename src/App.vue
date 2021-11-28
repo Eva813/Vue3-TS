@@ -1,35 +1,34 @@
 <template>
   <div class="container">
     <global-header :user="currentUser"></global-header>
-    <form action="">
+    <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">郵件地址</label>
-        <validate-input :rules="emailRules" v-model="emailVal">
+        <validate-input
+          :rules="emailRules"
+          v-model="emailVal"
+          placeholder="請輸入電子郵件"
+          type="text"
+          ref="inputRef"
+        >
           {{ emailVal }}
         </validate-input>
       </div>
       <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">邮箱地址</label>
-        <input
-          type="text"
-          class="form-control"
-          id="exampleInputEmail1"
-          v-model="emailRef.val"
-          @blur="validateEmail"
-        />
-        <div class="form-text" v-if="emailRef.error">
-          {{ emailRef.message }}
-        </div>
-      </div>
-      <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">密码</label>
-        <input
+        <label class="form-label">密碼</label>
+        <validate-input
+          :rules="passwordRules"
+          v-model="passwordVal"
           type="password"
-          class="form-control"
-          id="exampleInputPassword1"
-        />
+          placeholder="請輸入密碼"
+        >
+          {{ emailVal }}
+        </validate-input>
       </div>
-    </form>
+      <template v-slot:submit>
+        <span class="btn btn-danger">Submit</span>
+      </template>
+    </validate-form>
   </div>
 </template>
 
@@ -40,6 +39,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ColumnList, { ColumnProps } from "@/components/ColumnList.vue";
 import GlobalHeader, { UserProps } from "@/components/GlobalHeader.vue";
 import ValidateInput, { RulesProp } from "./components/ValidateInput.vue";
+import ValidateForm from "./components/ValidateForm.vue";
 
 const emailReg =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -91,34 +91,46 @@ export default defineComponent({
     // ColumnList,
     GlobalHeader,
     ValidateInput,
+    ValidateForm,
   },
   setup() {
-    const emailVal = ref("Eva");
+    const inputRef = ref<any>();
+    const emailVal = ref("");
     const emailRules: RulesProp = [
       { type: "required", message: "電子郵件為必填" },
       { type: "email", message: "請輸入正確的格式" },
     ];
-    const emailRef = reactive({
-      val: "",
-      error: false,
-      message: "",
-    });
-    const validateEmail = () => {
-      if (emailRef.val.trim() === "") {
-        emailRef.error = true;
-        emailRef.message = "can not be empty";
-      } else if (!emailReg.test(emailRef.val)) {
-        emailRef.error = true;
-        emailRef.message = "should be valid email";
-      }
+    //原本的驗證方式：
+    // const emailRef = reactive({
+    //   val: "",
+    //   error: false,
+    //   message: "",
+    // });
+    // const validateEmail = () => {
+    //   if (emailRef.val.trim() === "") {
+    //     emailRef.error = true;
+    //     emailRef.message = "can not be empty";
+    //   } else if (!emailReg.test(emailRef.val)) {
+    //     emailRef.error = true;
+    //     emailRef.message = "should be valid email";
+    //   }
+    // };
+    const passwordVal = ref("");
+    const passwordRules: RulesProp = [
+      { type: "required", message: "密碼不能為空" },
+    ];
+    const onFormSubmit = (result: boolean) => {
+      console.log("1234", result);
     };
     return {
       outlist: testData,
       currentUser,
-      emailRef,
-      validateEmail,
       emailRules,
       emailVal,
+      passwordVal,
+      passwordRules,
+      onFormSubmit,
+      inputRef,
     };
   },
 });

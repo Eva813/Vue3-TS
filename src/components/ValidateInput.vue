@@ -14,7 +14,8 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, PropType } from "vue";
+import { defineComponent, reactive, PropType, onMounted } from "vue";
+import { emitter } from "./ValidateForm.vue";
 const emailReg =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 interface RuleProp {
@@ -59,8 +60,14 @@ export default defineComponent({
           return passed;
         });
         inputRef.error = !allPassed;
+        return allPassed;
       }
+      return true;
     };
+    onMounted(() => {
+      //觸發對應事件
+      emitter.emit("form-item-created", validateInput);
+    });
     return {
       inputRef,
       validateInput,
