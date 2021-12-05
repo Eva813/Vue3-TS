@@ -33,6 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 import "bootstrap/dist/css/bootstrap.min.css";
 //將其中的interface也引入
 import ValidateInput, { RulesProp } from "@/components/ValidateInput.vue";
@@ -83,7 +84,7 @@ import { testData } from "../testData";
 // ];
 
 export default defineComponent({
-  name: "App",
+  name: "Login",
   components: {
     // ColumnList,
     ValidateInput,
@@ -92,6 +93,7 @@ export default defineComponent({
   setup() {
     const inputRef = ref<any>();
     const emailVal = ref("");
+    const router = useRouter();
     const emailRules: RulesProp = [
       { type: "required", message: "電子郵件為必填" },
       { type: "email", message: "請輸入正確的格式" },
@@ -102,6 +104,9 @@ export default defineComponent({
     ];
     const onFormSubmit = (result: boolean) => {
       console.log("1234", result);
+      if (result) {
+        router.push({ name: "column", params: { id: 1 } });
+      }
     };
     return {
       outlist: testData,
